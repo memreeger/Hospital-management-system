@@ -11,6 +11,15 @@ public class Patient extends Person {
     public Patient(String firstName, String lastName, String phone, String email,
                    String patientNumber, BloodType bloodType, String emergencyContact) {
         super(firstName, lastName, phone, email);
+
+        // VALIDATIONLAR MODEL İÇİNDE !!!!
+        if (patientNumber == null || patientNumber.isBlank()) {
+            throw new IllegalArgumentException("Patient number cannot be null or blank");
+        }
+        if (bloodType == null) {
+            throw new IllegalArgumentException("Blood type cannot be null");
+        }
+
         this.patientNumber = patientNumber;
         this.bloodType = bloodType;
         this.emergencyContact = (emergencyContact != null) ? emergencyContact : "";
@@ -29,6 +38,9 @@ public class Patient extends Person {
     }
 
     public void setPatientNumber(String patientNumber) {
+        if (patientNumber == null || patientNumber.isBlank()) {
+            throw new IllegalArgumentException("Patient number cannot be null or blank");
+        }
         this.patientNumber = patientNumber;
     }
 
@@ -46,7 +58,7 @@ public class Patient extends Person {
     @Override
     public String toString() {
         return "Patient{" +
-                "id='" + id + '\'' +
+                "id='" + getId() + '\'' +
                 ", fullName='" + getFullName() + '\'' +
                 ", patientNumber='" + patientNumber + '\'' +
                 ", bloodType='" + bloodType + '\'' +

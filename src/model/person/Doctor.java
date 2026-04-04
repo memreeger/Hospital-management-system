@@ -9,6 +9,10 @@ public class Doctor extends Staff {
     public Doctor(String firstName, String lastName, String phone, String email,
                   Department department, double salary, String specialization) {
         super(firstName, lastName, phone, email, department, salary);
+
+        if (specialization == null || specialization.isBlank()) { // model içinde validasyon !!!!
+            throw new IllegalArgumentException("Specialization cannot be null or blank");
+        }
         this.specialization = specialization;
     }
 
@@ -17,15 +21,18 @@ public class Doctor extends Staff {
     }
 
     public void setSpecialization(String specialization) {
+        if (specialization == null || specialization.isBlank()) {
+            throw new IllegalArgumentException("Specialization cannot be null or blank");
+        }
         this.specialization = specialization;
     }
 
     @Override
     public String toString() {
         return "Doctor{" +
-                "id='" + id + '\'' +
+                "id='" + getId() + '\'' +
                 ", fullName='" + getFullName() + '\'' +
-                ", department='" + (department != null ? department.getName() : "N/A") + '\'' +
+                ", department='" + getDepartment().getName() + '\'' +
                 ", specialization='" + specialization + '\'' +
                 '}';
     }

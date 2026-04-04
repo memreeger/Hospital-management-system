@@ -27,6 +27,19 @@ public abstract class Staff extends Person {
     }
 
     public void setSalary(double salary) {
+        if (salary < 0) {
+            throw new IllegalArgumentException("Salary cannot be negative");
+        }
         this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "id='" + getId() + '\'' +
+                ", name='" + getFullName() + '\'' +
+                ", department='" + department.getName() + '\'' +
+                ", salary=" + salary +
+                '}';
     }
 }
