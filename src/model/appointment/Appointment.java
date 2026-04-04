@@ -17,12 +17,19 @@ public class Appointment {
     private String reason;
 
     public Appointment(Patient patient, Doctor doctor, LocalDateTime appointmentDateTime, String reason) {
+        validateString(reason, "Reason");
         this.id = UUID.randomUUID().toString();
         this.patient = patient;
         this.doctor = doctor;
         this.appointmentDateTime = appointmentDateTime;
         this.reason = reason;
         this.status = AppointmentStatus.SCHEDULED;
+    }
+
+    private void validateString(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " cannot be null or blank");
+        }
     }
 
     public String getId() {
@@ -54,6 +61,7 @@ public class Appointment {
     }
 
     public void setReason(String reason) {
+        validateString(reason, "Reason");
         this.reason = reason;
     }
 
@@ -69,7 +77,7 @@ public class Appointment {
         }
     }
 
-    public boolean isActive(){
+    public boolean isActive() {
         return this.status == AppointmentStatus.SCHEDULED;
     }
 

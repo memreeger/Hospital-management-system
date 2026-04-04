@@ -53,6 +53,8 @@ public class PatientService {
         return patient;
     }
 
+
+
     public Patient deletePatient(String patientNumber) {
         if (patientNumber == null || patientNumber.isBlank()) {
             throw new IllegalArgumentException("Patient number cannot be null");

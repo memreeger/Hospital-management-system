@@ -30,7 +30,7 @@ public enum BloodType {
         normalized = normalized.replace('0', 'O');
 
         for (BloodType type : BloodType.values()) {
-            if (type.getLabel().equals(normalized)) {
+            if (type.getLabel().equalsIgnoreCase(normalized)) {
                 return type;
             }
         }
