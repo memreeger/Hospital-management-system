@@ -226,7 +226,7 @@ public class PatientService {
             throw new IllegalArgumentException("Phone cannot be null or blank");
         }
         Patient patient = patientsById.values().stream()
-                .filter(patient -> patient.getPhone().equals(phone))
+                .filter(p -> p.getPhone().equals(phone))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
 
