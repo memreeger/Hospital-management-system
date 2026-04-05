@@ -31,8 +31,8 @@ public class MenuManager {
         this.scanner = new Scanner(System.in);
         this.appointmentService = new AppointmentService();
 
-        Department cardiology = new Department("D001", "Cardiology");
-        Department neurology = new Department("D002", "Neurology");
+        Department cardiology = new Department( "Cardiology");
+        Department neurology = new Department( "Neurology");
 
         this.patient1 = new Patient("Cemre", "Tekin", "1111111111", "cemre@mail.com",
                 "P001", BloodType.A_POSITIVE, "Emmi");

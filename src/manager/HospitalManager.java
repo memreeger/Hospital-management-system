@@ -6,6 +6,7 @@ import model.enums.BloodType;
 import model.person.Doctor;
 import model.person.Patient;
 import service.AppointmentService;
+import service.DepartmentService;
 import service.DoctorService;
 import service.PatientService;
 
@@ -20,6 +21,7 @@ public class HospitalManager {
     private final PatientService patientService;
     private final DoctorService doctorService;
     private final AppointmentService appointmentService;
+    private final DepartmentService departmentService;
     private final Scanner scanner;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -27,6 +29,7 @@ public class HospitalManager {
         this.patientService = new PatientService();
         this.doctorService = new DoctorService();
         this.appointmentService = new AppointmentService();
+        this.departmentService = new DepartmentService();
         this.scanner = new Scanner(System.in);
     }
 
@@ -45,6 +48,7 @@ public class HospitalManager {
             System.out.println("10 - Cancel Appointment");
             System.out.println("11 - Complete Appointment");
             System.out.println("12 - List Appointments");
+            System.out.println("13 - List Departments");
             System.out.println("0 - Exit");
 
             System.out.print("Choice: ");
@@ -70,6 +74,7 @@ public class HospitalManager {
                     case 10 -> cancelAppointmentFlow();
                     case 11 -> completeAppointmentFlow();
                     case 12 -> listAppointments();
+                    case 13 -> listDepartments();
                     case 0 -> {
                         System.out.println("Goodbye!");
                         return;
@@ -154,6 +159,22 @@ public class HospitalManager {
         return appointments.get(choice - 1);
     }
 
+    private Department findOrCreateDepartment(String departmentName) {
+        if (departmentService.getAllDepartments().isEmpty()) {
+            return departmentService.addDepartment(departmentName);
+        }
+
+        List<Department> matches = departmentService.searchDepartmentsByName(departmentName);
+
+        for (Department department : matches) {
+            if (department.getName().equalsIgnoreCase(departmentName.trim())) {
+                return department;
+            }
+        }
+
+        return departmentService.addDepartment(departmentName);
+    }
+
     // ================== PATIENT FLOWS ==================
 
     private void addPatientFlow() {
@@ -218,8 +239,11 @@ public class HospitalManager {
 
     private void listPatients() {
         List<Patient> patients = patientService.getAllPatients();
-        if (patients.isEmpty()) System.out.println("No patients found.");
-        else patients.forEach(System.out::println);
+        if (patients.isEmpty()) {
+            System.out.println("No patients found.");
+        } else {
+            patients.forEach(System.out::println);
+        }
     }
 
     // ================== DOCTOR FLOWS ==================
@@ -235,13 +259,18 @@ public class HospitalManager {
         String email = scanner.nextLine();
         System.out.print("Department Name: ");
         String depName = scanner.nextLine();
-        Department department = new Department("D" + (doctorService.getAllDoctors().size() + 1), depName);
+
+        Department department = findOrCreateDepartment(depName);
+
         System.out.print("Salary: ");
         double salary = Double.parseDouble(scanner.nextLine());
         System.out.print("Specialization: ");
         String specialization = scanner.nextLine();
 
-        Doctor doctor = doctorService.addDoctor(firstName, lastName, phone, email, department, salary, specialization);
+        Doctor doctor = doctorService.addDoctor(
+                firstName, lastName, phone, email,
+                department, salary, specialization
+        );
         System.out.println("Added Doctor: " + doctor);
     }
 
@@ -256,13 +285,15 @@ public class HospitalManager {
         String email = scanner.nextLine();
         System.out.print("New Department Name (" + doctor.getDepartment().getName() + "): ");
         String depName = scanner.nextLine();
-        Department department = new Department(
-                doctor.getDepartment().getId(),
-                depName.isBlank() ? doctor.getDepartment().getName() : depName
-        );
+
+        Department department = depName.isBlank()
+                ? doctor.getDepartment()
+                : findOrCreateDepartment(depName);
+
         System.out.print("New Salary (" + doctor.getSalary() + "): ");
         String salaryInput = scanner.nextLine();
         double salary = salaryInput.isBlank() ? doctor.getSalary() : Double.parseDouble(salaryInput);
+
         System.out.print("New Specialization (" + doctor.getSpecialization() + "): ");
         String specialization = scanner.nextLine();
 
@@ -287,8 +318,20 @@ public class HospitalManager {
 
     private void listDoctors() {
         List<Doctor> doctors = doctorService.getAllDoctors();
-        if (doctors.isEmpty()) System.out.println("No doctors found.");
-        else doctors.forEach(System.out::println);
+        if (doctors.isEmpty()) {
+            System.out.println("No doctors found.");
+        } else {
+            doctors.forEach(System.out::println);
+        }
+    }
+
+    private void listDepartments() {
+        List<Department> departments = departmentService.getAllDepartments();
+        if (departments.isEmpty()) {
+            System.out.println("No departments found.");
+        } else {
+            departments.forEach(System.out::println);
+        }
     }
 
     // ================== APPOINTMENT FLOWS ==================
@@ -334,7 +377,10 @@ public class HospitalManager {
 
     private void listAppointments() {
         List<Appointment> appointments = appointmentService.getAllAppointmentsSorted();
-        if (appointments.isEmpty()) System.out.println("No appointments found.");
-        else appointments.forEach(System.out::println);
+        if (appointments.isEmpty()) {
+            System.out.println("No appointments found.");
+        } else {
+            appointments.forEach(System.out::println);
+        }
     }
 }

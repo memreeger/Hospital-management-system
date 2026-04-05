@@ -12,11 +12,21 @@ public class Department {
     private String name;
     private List<Staff> staffList;
 
-    public Department(String id, String name) {
+
+    public Department(String name) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.staffList = new ArrayList<>();
     }
+    //VALIDATION HELPER
+
+    public void validateString(String name, String fieldName) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException(fieldName + "cannot be null or blank");
+        }
+
+    }
+
 
     public String getId() {
         return id;
@@ -31,6 +41,7 @@ public class Department {
     }
 
     public void setName(String name) {
+        validateString(name, "Name");
         this.name = name;
     }
 
@@ -38,6 +49,13 @@ public class Department {
         if (staff != null) {
             staffList.add(staff);
         }
+    }
+
+    public void removeStaff(Staff staff) {
+        if (staff == null) {
+            throw new IllegalArgumentException("Staff cannot be null");
+        }
+        staffList.remove(staff);
     }
 
     @Override

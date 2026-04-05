@@ -12,6 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Appointment management service !!! .
+ * * @author Muhammed Emre Eğer
+ * @version 1.0
+ */
+
 public class AppointmentService {
     private Map<String, Appointment> appointments;
 
@@ -72,6 +78,11 @@ public class AppointmentService {
 
     }
 
+    /**
+     * Verilen ID'ye göre randevu iptal eder.
+     * * @appointmentId id Kullanıcının benzersiz numarası
+     * @return Kullanıcı adı, bulunamazsa null
+     */
     public Appointment cancelAppointment(String appointmentId) {
         if (appointmentId == null || appointmentId.isBlank()) {
             throw new IllegalArgumentException("Appointment id cannot be null or blank");

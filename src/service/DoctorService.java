@@ -41,6 +41,7 @@ public class DoctorService {
 
         Doctor doctor = new Doctor(firstName, lastName, phone, email, department, salary, specialization);
         doctors.put(doctor.getId(), doctor);
+        department.addStaff(doctor);
         return doctor;
 
     }
@@ -126,6 +127,7 @@ public class DoctorService {
         validateString(phone, "Phone");
         validateString(email, "E-mail");
         validateString(specialization, "Specialization");
+
         if (department == null) {
             throw new IllegalArgumentException("Department cannot be null");
         }
@@ -175,6 +177,8 @@ public class DoctorService {
         }
 
         doctors.remove(id);
+        Department department = doctor.getDepartment();
+        department.removeStaff(doctor);
         return doctor;
     }
 
@@ -185,5 +189,9 @@ public class DoctorService {
     public boolean existsById(String id) {
         validateString(id, "ID");
         return doctors.containsKey(id);
+    }
+
+    public int getDoctorCount() {
+        return doctors.size();
     }
 }
