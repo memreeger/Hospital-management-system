@@ -23,10 +23,17 @@ public abstract class Staff extends Person {
     }
 
     public void setDepartment(Department department) {
+        if (department == null) {
+            throw new IllegalArgumentException("Department cannot be null");
+        }
         this.department = department;
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(Double salary) { // null kontrolü yapmak için Double Wrap giydirdim.
+        if (salary == null) {
+            throw new IllegalArgumentException("Salary cannot be null");
+        }
+
         if (salary < 0) {
             throw new IllegalArgumentException("Salary cannot be negative");
         }
