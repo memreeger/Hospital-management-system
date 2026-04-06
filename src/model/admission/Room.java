@@ -12,12 +12,12 @@ public class Room {
     private RoomStatus roomStatus;
     private double dailyRate;
 
-    public Room(int roomNumber, RoomType roomType, double dailyRate) {
+    public Room(int roomNumber, RoomType roomType) {
         this.id = UUID.randomUUID().toString();
         this.roomNumber = roomNumber;
         this.roomType = roomType;
-        this.dailyRate = dailyRate;
         this.roomStatus = RoomStatus.AVAILABLE;
+        this.dailyRate = roomType.getDefaultRate();
     }
 
     //Getter
