@@ -1,6 +1,7 @@
 package model.admission;
 
 import model.enums.AdmissionStatus;
+import model.person.Doctor;
 import model.person.Patient;
 
 import java.time.LocalDateTime;
@@ -8,10 +9,11 @@ import java.util.UUID;
 
 public class Admission {
     private String id;
+    private Doctor responsibleDoctor;
     private Patient patient;
     private Room room;
     private LocalDateTime admissionDate;
-    private LocalDateTime dischargedDate;
+    private LocalDateTime dischargeDate;
     private AdmissionStatus status;
 
     public Admission(Patient patient, Room room) {
@@ -26,7 +28,7 @@ public class Admission {
         this.patient = patient;
         this.room = room;
         this.admissionDate = LocalDateTime.now();
-        this.dischargedDate = null;
+        this.dischargeDate = null;
         this.status = AdmissionStatus.ACTIVE;
     }
 
@@ -39,7 +41,7 @@ public class Admission {
             throw new IllegalStateException("Patient already discharged");
         }
 
-        this.dischargedDate = LocalDateTime.now();
+        this.dischargeDate = LocalDateTime.now();
         this.status = AdmissionStatus.DISCHARGED;
     }
 
@@ -59,13 +61,37 @@ public class Admission {
         return admissionDate;
     }
 
-    public LocalDateTime getDischargedDate() {
-        return dischargedDate;
+    public LocalDateTime getDischargeDate() {
+        return dischargeDate;
     }
 
     public AdmissionStatus getStatus() {
         return status;
     }
 
+    public void assignDoctor(Doctor doctor) {
+        if (doctor == null) {
+            throw new IllegalArgumentException("Doctor cannot be null");
+        }
+        this.responsibleDoctor = doctor;
+    }
+
+
+    public long getLengthOfStayInDays() {
+        LocalDateTime endDate = (dischargeDate != null) ? dischargeDate : LocalDateTime.now();
+        return java.time.Duration.between(admissionDate, endDate).toDays();
+    }
+
+    @Override
+    public String toString() {
+        return "Admission{" +
+                "id='" + id + '\'' +
+                ", patient='" + patient.getFullName() + '\'' +
+                ", roomNumber=" + room.getRoomNumber() +
+                ", admissionDate=" + admissionDate +
+                ", dischargeDate=" + dischargeDate +
+                ", status=" + status +
+                '}';
+    }
 
 }
