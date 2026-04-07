@@ -18,6 +18,15 @@ public class Appointment {
 
     public Appointment(Patient patient, Doctor doctor, LocalDateTime appointmentDateTime, String reason) {
         validateString(reason, "Reason");
+        if (patient == null){
+            throw new IllegalArgumentException("Patient cannot be null");
+        }
+        if (doctor == null){
+            throw new IllegalArgumentException("Doctor cannot be null");
+        }
+        if (appointmentDateTime == null){
+            throw new IllegalArgumentException("Appointment date time cannot be null");
+        }
         this.id = UUID.randomUUID().toString();
         this.patient = patient;
         this.doctor = doctor;
