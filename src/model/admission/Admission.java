@@ -41,7 +41,12 @@ public class Admission {
             throw new IllegalStateException("Patient already discharged");
         }
 
-        this.dischargeDate = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(this.admissionDate)) {
+            throw new IllegalStateException("Discharge date cannot be before admission date");
+        }
+
+        this.dischargeDate = now;
         this.status = AdmissionStatus.DISCHARGED;
     }
 
@@ -55,6 +60,10 @@ public class Admission {
 
     public Room getRoom() {
         return room;
+    }
+
+    public Doctor getResponsibleDoctor() {
+        return responsibleDoctor;
     }
 
     public LocalDateTime getAdmissionDate() {
@@ -82,12 +91,20 @@ public class Admission {
         return java.time.Duration.between(admissionDate, endDate).toDays();
     }
 
+    public void transferRoom(Room newRoom) {
+        if (newRoom == null) {
+            throw new IllegalArgumentException("Room cannot be null");
+        }
+        this.room = newRoom;
+    }
+
     @Override
     public String toString() {
         return "Admission{" +
                 "id='" + id + '\'' +
                 ", patient='" + patient.getFullName() + '\'' +
                 ", roomNumber=" + room.getRoomNumber() +
+                ", doctor= " + responsibleDoctor.getFullName() +
                 ", admissionDate=" + admissionDate +
                 ", dischargeDate=" + dischargeDate +
                 ", status=" + status +
