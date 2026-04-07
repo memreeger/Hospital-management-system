@@ -155,6 +155,9 @@ public class DoctorService {
         validateString(phone, "Phone");
 
         Doctor doctor = doctors.get(id);
+        if (doctor == null) {
+            throw new IllegalArgumentException("Doctor not found");
+        }
         doctor.setPhone(phone);
         return doctor;
     }
@@ -164,6 +167,9 @@ public class DoctorService {
         validateString(email, "E-mail");
 
         Doctor doctor = doctors.get(id);
+        if (doctor == null) {
+            throw new IllegalArgumentException("Doctor not found");
+        }
         doctor.setEmail(email);
         return doctor;
     }
@@ -184,6 +190,7 @@ public class DoctorService {
 
     public void deleteAllDoctors() {
         doctors.clear();
+        
     }
 
     public boolean existsById(String id) {
