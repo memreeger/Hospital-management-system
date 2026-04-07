@@ -35,7 +35,7 @@ public class RoomService {
 
     private void validateString(String field, String fieldName) {
         if (field == null || field.isBlank()) {
-            throw new IllegalArgumentException(fieldName + "cannot be null or empty");
+            throw new IllegalArgumentException(fieldName + " cannot be null or empty");
         }
     }
 
