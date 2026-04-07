@@ -14,6 +14,8 @@ public class Department {
 
 
     public Department(String name) {
+        validateString(name, "Name");
+
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.staffList = new ArrayList<>();
@@ -22,7 +24,7 @@ public class Department {
 
     public void validateString(String name, String fieldName) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(fieldName + "cannot be null or blank");
+            throw new IllegalArgumentException(fieldName + " cannot be null or blank");
         }
 
     }
