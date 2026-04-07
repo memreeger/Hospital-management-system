@@ -13,6 +13,14 @@ public class Room {
     private double dailyRate;
 
     public Room(int roomNumber, RoomType roomType) {
+        if (roomNumber < 0) {
+            throw new IllegalArgumentException("Room number cannot be lover than 0");
+        }
+
+        if (roomType == null) {
+            throw new IllegalArgumentException("Room type cannot be null");
+        }
+
         this.id = UUID.randomUUID().toString();
         this.roomNumber = roomNumber;
         this.roomType = roomType;
