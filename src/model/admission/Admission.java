@@ -104,7 +104,7 @@ public class Admission {
                 "id='" + id + '\'' +
                 ", patient='" + patient.getFullName() + '\'' +
                 ", roomNumber=" + room.getRoomNumber() +
-                ", doctor= " + responsibleDoctor.getFullName() +
+              //  ", doctor= " + responsibleDoctor.getFullName() +
                 ", admissionDate=" + admissionDate +
                 ", dischargeDate=" + dischargeDate +
                 ", status=" + status +
