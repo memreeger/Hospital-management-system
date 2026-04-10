@@ -4,21 +4,31 @@ import java.util.UUID;
 
 public abstract class Person {
 
-    protected String id;
+    //private static int x = 1;
+
+    protected int id;
     protected String firstName;
     protected String lastName;
     protected String phone;
     protected String email;
 
+    public static int nextId = 1;
+
     public Person(String firstName, String lastName, String phone, String email) {
-        this.id = UUID.randomUUID().toString();
+        this.id = nextId++;
+        //this.id = x++; // bu şekilde incremental id oluşturabiliriz.
 
         // VALIDATION
+
+        //setFirstName(firstName); bu şekilde de yapabilirsin
+
+
         this.firstName = requireNonBlank(firstName, "First name");
         this.lastName = requireNonBlank(lastName, "Last name");
         this.phone = requireNonBlank(phone, "Phone");
         this.email = requireNonBlank(email, "Email");
     }
+
 
     // HELPER METHOD
     protected String requireNonBlank(String value, String fieldName) {
@@ -28,12 +38,27 @@ public abstract class Person {
         return value;
     }
 
+
     // GETTERS
-    public String getId() { return id; }
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
-    public String getPhone() { return phone; }
-    public String getEmail() { return email; }
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     // SETTERS WITH VALIDATION
     public void setFirstName(String firstName) {

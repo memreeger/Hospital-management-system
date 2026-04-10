@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DoctorService {
-    private Map<String, Doctor> doctors;
+    private Map<Integer, Doctor> doctors;
 
     public DoctorService() {
         this.doctors = new HashMap<>();
@@ -22,8 +22,14 @@ public class DoctorService {
         }
     }
 
+    private void validateInt(int value, String fieldName) {
+        if (value < 0) {
+            throw new IllegalArgumentException(fieldName + " cannot be smaller than 0");
+        }
+    }
+
     public Doctor addDoctor(String firstName, String lastName, String phone, String email,
-                            Department department, double salary, String specialization) {
+                            Department department, double salary, String specialization, double fee) {
         validateString(firstName, "First name");
         validateString(lastName, "Last name");
         validateString(phone, "Phone");
@@ -39,7 +45,7 @@ public class DoctorService {
 
         validateString(specialization, "Specialization");
 
-        Doctor doctor = new Doctor(firstName, lastName, phone, email, department, salary, specialization);
+        Doctor doctor = new Doctor(firstName, lastName, phone, email, department, salary, specialization, fee);
         doctors.put(doctor.getId(), doctor);
         department.addStaff(doctor);
         return doctor;
@@ -120,9 +126,9 @@ public class DoctorService {
                 .toList();
     }
 
-    public Doctor updateDoctor(String id, String lastName, String phone, String email, Department department,
+    public Doctor updateDoctor(int id, String lastName, String phone, String email, Department department,
                                Double salary, String specialization) {
-        validateString(id, "ID");
+        validateInt(id, "ID");
         validateString(lastName, "Last name");
         validateString(phone, "Phone");
         validateString(email, "E-mail");
@@ -162,8 +168,8 @@ public class DoctorService {
         return doctor;
     }
 
-    public Doctor updateDoctorEmail(String id, String email) {
-        validateString(id, "ID");
+    public Doctor updateDoctorEmail(int id, String email) {
+        validateInt(id, "ID");
         validateString(email, "E-mail");
 
         Doctor doctor = doctors.get(id);
@@ -174,8 +180,8 @@ public class DoctorService {
         return doctor;
     }
 
-    public Doctor removeDoctorById(String id) {
-        validateString(id, "ID");
+    public Doctor removeDoctorById(int id) {
+        validateInt(id, "ID");
 
         Doctor doctor = doctors.get(id);
         if (doctor == null) {
@@ -190,7 +196,7 @@ public class DoctorService {
 
     public void deleteAllDoctors() {
         doctors.clear();
-        
+
     }
 
     public boolean existsById(String id) {

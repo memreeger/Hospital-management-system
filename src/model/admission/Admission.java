@@ -8,13 +8,16 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Admission {
-    private String id;
+    private int id;
     private Doctor responsibleDoctor;
     private Patient patient;
     private Room room;
     private LocalDateTime admissionDate;
     private LocalDateTime dischargeDate;
     private AdmissionStatus status;
+    private String description;
+
+    private static int nextId = 1;
 
     public Admission(Patient patient, Room room) {
         if (patient == null) {
@@ -24,7 +27,7 @@ public class Admission {
             throw new IllegalArgumentException("Room cannot be null");
         }
 
-        this.id = UUID.randomUUID().toString();
+        this.id = nextId++;
         this.patient = patient;
         this.room = room;
         this.admissionDate = LocalDateTime.now();
@@ -50,7 +53,7 @@ public class Admission {
         this.status = AdmissionStatus.DISCHARGED;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -76,6 +79,10 @@ public class Admission {
 
     public AdmissionStatus getStatus() {
         return status;
+    }
+
+    public String getDescription(){
+        return description;
     }
 
     public void assignDoctor(Doctor doctor) {

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AdmissionService {
-    private Map<String, Admission> admissions;
+    private Map<Integer, Admission> admissions;
     private RoomService roomService;
 
 
@@ -32,8 +32,14 @@ public class AdmissionService {
         }
     }
 
-    private Admission getAdmissionOrThrow(String id) {
-        validateString(id, "ID");
+    public void validatteInt(int val, String fieldname) {
+        if (val < 0) {
+            throw new IllegalArgumentException(fieldname + " cannot be smaller than 0");
+        }
+    }
+
+    private Admission getAdmissionOrThrow(int id) {
+        validatteInt(id, "Id");
 
         Admission admission = admissions.get(id);
         if (admission == null) {
@@ -44,7 +50,7 @@ public class AdmissionService {
 
     private boolean hasActiveAdmissionByPatient(Patient patient) {
         return admissions.values().stream()
-                .anyMatch(a -> a.getPatient().getId().equals(patient.getId())
+                .anyMatch(a -> a.getPatient().getId() == (patient.getId())
                         && a.isActive());
     }
 
@@ -73,8 +79,8 @@ public class AdmissionService {
         return admission;
     }
 
-    public Admission dischargePatient(String id) {
-        validateString(id, "ID");
+    public Admission dischargePatient(int id) {
+        validatteInt(id, "Id");
 
         Admission admission = getAdmissionOrThrow(id);
         if (!admission.isActive()) {
@@ -88,8 +94,8 @@ public class AdmissionService {
 
 
     //Read
-    public Admission getAdmissionById(String id) {
-        validateString(id, "ID");
+    public Admission getAdmissionById(int id) {
+        validatteInt(id, "Id");
         return getAdmissionOrThrow(id);
     }
 
@@ -105,7 +111,7 @@ public class AdmissionService {
             throw new IllegalArgumentException("Patient cannot be null");
         }
         List<Admission> result = admissions.values().stream()
-                .filter(a -> a.getPatient().getId().equals(patient.getId()))
+                .filter(a -> a.getPatient().getId() == (patient.getId()))
                 .toList();
         return result;
     }
@@ -115,7 +121,7 @@ public class AdmissionService {
             throw new IllegalArgumentException("Room cannot be null");
         }
         List<Admission> result = admissions.values().stream()
-                .filter(a -> a.getRoom().getId().equals(room.getId()))
+                .filter(a -> a.getRoom().getId() == (room.getId()))
                 .toList();
         return result;
     }
@@ -135,10 +141,10 @@ public class AdmissionService {
 
 
     //Update
-    public void transferPatient(String admissionId, Room newRoom) {
-        validateString(admissionId,"Admission ID");
+    public void transferPatient(int admissionId, Room newRoom) {
+        validatteInt(admissionId, "Admission id");
 
-        if(newRoom == null){
+        if (newRoom == null) {
             throw new IllegalArgumentException("New room canno be null");
         }
         Admission admission = getAdmissionOrThrow(admissionId);
@@ -178,8 +184,8 @@ public class AdmissionService {
         admissions.clear();
     }
 
-    public Admission removeAdmissionById(String id) {
-        validateString(id, "ID");
+    public Admission removeAdmissionById(int id) {
+        validatteInt(id, "Id");
 
         Admission admission = getAdmissionOrThrow(id);
         Room room = admission.getRoom();

@@ -1,6 +1,7 @@
 package service;
 
 import model.admission.Room;
+import model.billing.Invoice;
 import model.enums.RoomStatus;
 import model.enums.RoomType;
 
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RoomService {
-    private Map<String, Room> rooms;
+    private Map<Integer, Room> rooms;
     private final int maxCapacity;
 
 
@@ -19,6 +20,7 @@ public class RoomService {
         this.rooms = new HashMap<>();
         this.maxCapacity = 30;
     }
+
 
     //Validation
     private void validateRoomNumber(int roomNumber) {
@@ -33,9 +35,9 @@ public class RoomService {
         }
     }
 
-    private void validateString(String field, String fieldName) {
-        if (field == null || field.isBlank()) {
-            throw new IllegalArgumentException(fieldName + " cannot be null or empty");
+    private void validateInt(int id, String fieldName) {
+        if (id < 0) {
+            throw new IllegalArgumentException(fieldName + " cannot be smaller than 0");
         }
     }
 
@@ -70,8 +72,8 @@ public class RoomService {
 
     //Read methods
 
-    public Room getRoomById(String id) {
-        validateString(id, "ID");
+    public Room getRoomById(int id) {
+        validateInt(id, "ID");
 
         Room room = rooms.get(id);
         if (room == null) {
@@ -124,7 +126,7 @@ public class RoomService {
 
     //Update methods
 
-    public void markRoomOccupied(String id) {
+    public void markRoomOccupied(int id) {
         Room room = getRoomById(id);
 
         if (!room.isAvailable()) {
@@ -134,12 +136,12 @@ public class RoomService {
         room.setRoomStatus(RoomStatus.OCCUPIED);
     }
 
-    public void markRoomAvailable(String id) {
+    public void markRoomAvailable(int id) {
         Room room = getRoomById(id);
         room.setRoomStatus(RoomStatus.AVAILABLE);
     }
 
-    public void updateRoomType(String id, RoomType newType) {
+    public void updateRoomType(int id, RoomType newType) {
         validateRoomType(newType);
 
         Room room = getRoomById(id);
@@ -149,7 +151,7 @@ public class RoomService {
 
     //Delete
 
-    public Room removeRoomById(String id) {
+    public Room removeRoomById(int id) {
         Room room = getRoomById(id);
         rooms.remove(id);
         return room;

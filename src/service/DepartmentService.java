@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DepartmentService {
-    private Map<String, Department> departments;
+    private Map<Integer, Department> departments;
 
     public DepartmentService() {
         this.departments = new HashMap<>();
@@ -17,6 +17,12 @@ public class DepartmentService {
     public void validateString(String name, String fieldName) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException(fieldName + " cannot be null or blank");
+        }
+    }
+
+    public void validateInt(int val, String fieldName){
+        if(val < 0) {
+            throw new IllegalArgumentException(fieldName + " cannot be smaller than zero");
         }
     }
 
@@ -55,8 +61,8 @@ public class DepartmentService {
         return department;
     }
 
-    public Department updateDepartmentNameById(String id, String newName) {
-        validateString(id, "ID");
+    public Department updateDepartmentNameById(int id, String newName) {
+        validateInt(id, "Id");
         validateString(newName, "New name");
 
         Department department = departments.get(id);
@@ -65,7 +71,7 @@ public class DepartmentService {
         }
         //Duplicate kontrol
         boolean exists = departments.values().stream()
-                .anyMatch(d -> !d.getId().equals(id) &&
+                .anyMatch(d -> d.getId() != (id) &&
                         d.getName().equalsIgnoreCase(newName));
 
         if (exists) {

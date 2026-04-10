@@ -7,19 +7,30 @@ import model.person.Patient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Appointment management service !!! .
  * * @author Muhammed Emre Eğer
+ *
  * @version 1.0
  */
 
 public class AppointmentService {
-    private Map<String, Appointment> appointments;
+    private Map<Integer, Appointment> appointments;
+
+    //Helper
+    public void validateIntId(int id, String fieldName) {
+        if (id < 0) {
+            throw new IllegalArgumentException(fieldName + " cannot be smaller than zero");
+        }
+    }
+
+    public void validateString(String name, String fieldName) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException(fieldName + " cannot be null or blank");
+        }
+    }
 
     public AppointmentService() {
         this.appointments = new HashMap<>();
@@ -31,18 +42,13 @@ public class AppointmentService {
     }
 
     public Appointment createAppointment(Patient patient, Doctor doctor, LocalDateTime appointmentTime, String reason) {
-        if (patient == null) {
-            throw new IllegalArgumentException("Patient cannot be null");
-        }
-        if (doctor == null) {
-            throw new IllegalArgumentException("Doctor cannot be null");
-        }
+        Objects.requireNonNull(patient, "Patient cannot be null");
+        Objects.requireNonNull(doctor, "Doctor cannot be null");
+
         if (appointmentTime == null) {
             throw new IllegalArgumentException("Appointment time cannot be null");
         }
-        if (reason == null || reason.isBlank()) {
-            throw new IllegalArgumentException("Reason cannot be empty");
-        }
+        validateString(reason, "Reason");
 
 
         if (appointmentTime.isBefore(LocalDateTime.now())) {
@@ -52,7 +58,7 @@ public class AppointmentService {
         boolean isPatientBusy = appointments.values().stream()
                 .anyMatch(a ->
                         a.isActive() &&
-                                a.getPatient().getId().equals(patient.getId()) &&
+                                a.getPatient().getId() == (patient.getId()) &&
                                 isSameSlot(a.getAppointmentDateTime(), appointmentTime)
                 );
 
@@ -63,7 +69,7 @@ public class AppointmentService {
         boolean isDoctorBusy = appointments.values().stream()
                 .anyMatch(a ->
                         a.isActive() &&
-                                a.getDoctor().getId().equals(doctor.getId()) &&
+                                a.getDoctor().getId() == (doctor.getId()) &&
                                 isSameSlot(a.getAppointmentDateTime(), appointmentTime)
                 );
 
@@ -81,18 +87,15 @@ public class AppointmentService {
     /**
      * Verilen ID'ye göre randevu iptal eder.
      * * @appointmentId id Kullanıcının benzersiz numarası
+     *
      * @return Kullanıcı adı, bulunamazsa null
      */
-    public Appointment cancelAppointment(String appointmentId) {
-        if (appointmentId == null || appointmentId.isBlank()) {
-            throw new IllegalArgumentException("Appointment id cannot be null or blank");
-        }
+    public Appointment cancelAppointment(int appointmentId) {
+        validateIntId(appointmentId, "Appointment id");
 
         Appointment appointment = appointments.get(appointmentId);
 
-        if (appointment == null) {
-            throw new IllegalArgumentException("Appointment not found");
-        }
+        Objects.requireNonNull(appointment, "Appointment cannot be null");
 
         if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
             throw new IllegalStateException("This appointment is already cancelled");
@@ -107,62 +110,50 @@ public class AppointmentService {
     }
 
     public List<Appointment> getActiveAppointmentsByPatient(Patient patient) {
-        if (patient == null) {
-            throw new IllegalArgumentException("Patient cannot be null");
-        }
+        Objects.requireNonNull(patient, "Patient cannot be null");
 
         List<Appointment> appointmentsByPatient = appointments.values().stream()
                 .filter(a -> a.isActive() &&
-                        a.getPatient().getId().equals(patient.getId()))
+                        a.getPatient().getId() == (patient.getId()))
                 .toList();
         return appointmentsByPatient;
     }
 
     public List<Appointment> getActiveAppointmentsByDoctor(Doctor doctor) {
-        if (doctor == null) {
-            throw new IllegalArgumentException("Doctor cannot be null");
-        }
+        Objects.requireNonNull(doctor, "Doctor cannot be null");
 
         List<Appointment> appointmentsByDoctor = appointments.values().stream()
                 .filter(a -> a.isActive() &&
-                        a.getDoctor().getId().equals(doctor.getId()))
+                        a.getDoctor().getId() == (doctor.getId()))
                 .toList();
 
         return appointmentsByDoctor;
     }
 
     public List<Appointment> getAllAppointmentsByPatient(Patient patient) {
-        if (patient == null) {
-            throw new IllegalArgumentException("Patient cannot be null");
-        }
+        Objects.requireNonNull(patient, "Patient cannot be null");
 
         List<Appointment> appointmentsByPatient = appointments.values().stream()
-                .filter(a -> a.getPatient().getId().equals(patient.getId()))
+                .filter(a -> a.getPatient().getId() == (patient.getId()))
                 .toList();
         return appointmentsByPatient;
     }
 
     public List<Appointment> getAllAppointmentsByDoctor(Doctor doctor) {
-        if (doctor == null) {
-            throw new IllegalArgumentException("Doctor cannot be null");
-        }
+        Objects.requireNonNull(doctor, "Doctor cannot be null");
 
         List<Appointment> appointmentsByDoctor = appointments.values().stream()
-                .filter(a -> a.getDoctor().getId().equals(doctor.getId()))
+                .filter(a -> a.getDoctor().getId() == (doctor.getId()))
                 .toList();
 
         return appointmentsByDoctor;
     }
 
-    public Appointment completeAppointment(String appointmentId) {
-        if (appointmentId == null || appointmentId.isBlank()) {
-            throw new IllegalArgumentException("Appointment id cannot be null or blank");
-        }
+    public Appointment completeAppointment(int appointmentId) {
+        validateIntId(appointmentId, "Appointment id");
         Appointment appointment = appointments.get(appointmentId);
 
-        if (appointment == null) {
-            throw new IllegalArgumentException("Appointment not found");
-        }
+        Objects.requireNonNull(appointment, "Appointment cannot be null");
 
         if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
             throw new IllegalStateException("This appointment is already completed");
@@ -176,19 +167,15 @@ public class AppointmentService {
         return appointment;
     }
 
-    public Appointment rescheduleAppointment(String appointmentId, LocalDateTime newTime) {
-        if (appointmentId == null || appointmentId.isBlank()) {
-            throw new IllegalArgumentException("Appointment id cannot be null or blank");
-        }
+    public Appointment rescheduleAppointment(int appointmentId, LocalDateTime newTime) {
+        validateIntId(appointmentId, "Appointment id");
 
         if (newTime == null) {
             throw new IllegalArgumentException("Time field cannot be null");
         }
 
         Appointment appointment = appointments.get(appointmentId);
-        if (appointment == null) {
-            throw new IllegalArgumentException("Appointment not found");
-        }
+        Objects.requireNonNull(appointment, "Appointment cannot be null");
 
         if (appointment.getStatus() != AppointmentStatus.SCHEDULED) {
             throw new IllegalStateException("Only scheduled appointments can be rescheduled");
@@ -199,10 +186,11 @@ public class AppointmentService {
         }
 
         boolean isPatientBusy = appointments.values().stream()
-                .anyMatch(a -> a.isActive() &&
-                        a.getPatient().getId().equals(appointment.getPatient().getId()) &&
-                        isSameSlot(a.getAppointmentDateTime(), newTime) &&
-                        !a.getId().equals(appointmentId)
+                .anyMatch(a ->
+                        a.isActive() &&
+                                a.getPatient().getId() == appointment.getPatient().getId() &&
+                                isSameSlot(a.getAppointmentDateTime(), newTime) &&
+                                a.getId() != appointmentId
                 );
         if (isPatientBusy) {
             throw new IllegalStateException("Patient already has an appointment at this time");
@@ -210,9 +198,9 @@ public class AppointmentService {
 
         boolean isDoctorBusy = appointments.values().stream()
                 .anyMatch(a -> a.isActive() &&
-                        a.getDoctor().getId().equals(appointment.getDoctor().getId()) &&
+                        a.getDoctor().getId() == (appointment.getDoctor().getId()) &&
                         isSameSlot(a.getAppointmentDateTime(), newTime) &&
-                        !a.getId().equals(appointmentId)
+                        a.getId() != (appointmentId)
                 );
         if (isDoctorBusy) {
             throw new IllegalStateException("Doctor already has an appointment at this time");

@@ -9,12 +9,15 @@ import java.util.UUID;
 
 public class Appointment {
 
-    private String id;
+    private int id;
     private Patient patient;
     private Doctor doctor;
     private LocalDateTime appointmentDateTime;
     private AppointmentStatus status;
     private String reason;
+
+    private static int nextId = 1;
+
 
     public Appointment(Patient patient, Doctor doctor, LocalDateTime appointmentDateTime, String reason) {
         validateString(reason, "Reason");
@@ -27,7 +30,7 @@ public class Appointment {
         if (appointmentDateTime == null){
             throw new IllegalArgumentException("Appointment date time cannot be null");
         }
-        this.id = UUID.randomUUID().toString();
+        this.id = nextId++;
         this.patient = patient;
         this.doctor = doctor;
         this.appointmentDateTime = appointmentDateTime;
@@ -41,7 +44,7 @@ public class Appointment {
         }
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -66,6 +69,9 @@ public class Appointment {
     }
 
     public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
+        if(appointmentDateTime == null){
+            throw new IllegalArgumentException("Appointment time cannot bu null");
+        }
         this.appointmentDateTime = appointmentDateTime;
     }
 

@@ -267,7 +267,8 @@ public class HospitalManager {
             case 2 -> updatePatientFlow();
             case 3 -> deletePatientFlow();
             case 4 -> listPatients();
-            case 0 -> { }
+            case 0 -> {
+            }
         }
     }
 
@@ -369,7 +370,8 @@ public class HospitalManager {
             case 2 -> updateDoctorFlow();
             case 3 -> deleteDoctorFlow();
             case 4 -> listDoctors();
-            case 0 -> { }
+            case 0 -> {
+            }
         }
     }
 
@@ -393,12 +395,15 @@ public class HospitalManager {
         System.out.print("Salary: ");
         double salary = Double.parseDouble(scanner.nextLine());
 
+        System.out.print("fee: ");
+        double fee = Double.parseDouble(scanner.nextLine());
+
         System.out.print("Specialization: ");
         String specialization = scanner.nextLine();
 
         Doctor doctor = doctorService.addDoctor(
                 firstName, lastName, phone, email,
-                department, salary, specialization
+                department, salary, specialization, fee
         );
 
         System.out.println("Added Doctor: " + doctor);
@@ -478,7 +483,8 @@ public class HospitalManager {
             case 4 -> rescheduleAppointmentFlow();
             case 5 -> listAppointments();
             case 6 -> listActiveAppointments();
-            case 0 -> { }
+            case 0 -> {
+            }
         }
     }
 
@@ -573,7 +579,8 @@ public class HospitalManager {
             case 4 -> listRoomsByStatusFlow();
             case 5 -> removeRoomFlow();
             case 6 -> showRoomCapacityInfo();
-            case 0 -> { }
+            case 0 -> {
+            }
         }
     }
 
@@ -670,7 +677,8 @@ public class HospitalManager {
             case 7 -> listAdmissionsByRoomFlow();
             case 8 -> listActiveAdmissionsByRoomTypeFlow();
             case 9 -> showAdmissionStats();
-            case 0 -> { }
+            case 0 -> {
+            }
         }
     }
 

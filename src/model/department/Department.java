@@ -8,15 +8,16 @@ import java.util.UUID;
 
 public class Department {
 
-    private String id;
+    private int id;
     private String name;
     private List<Staff> staffList;
 
+    private static int nextId = 1;
 
     public Department(String name) {
         validateString(name, "Name");
 
-        this.id = UUID.randomUUID().toString();
+        this.id = nextId++;
         this.name = name;
         this.staffList = new ArrayList<>();
     }
@@ -30,7 +31,7 @@ public class Department {
     }
 
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

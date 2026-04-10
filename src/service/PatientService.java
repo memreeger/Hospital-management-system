@@ -9,13 +9,16 @@ import java.util.List;
 import java.util.Map;
 
 public class PatientService {
-    private Map<String, Patient> patientsById;
+    private Map<Integer, Patient> patientsById;
     private Map<String, Patient> patientsByNumber;
 
     public PatientService() {
         this.patientsById = new HashMap<>();
         this.patientsByNumber = new HashMap<>();
     }
+
+
+    public  int idd = 1;
 
     public Patient addPatient(String firstName, String lastName, String phone, String email,
                               String patientNumber, BloodType bloodType, String emergencyContact) {

@@ -6,11 +6,13 @@ import model.enums.RoomType;
 import java.util.UUID;
 
 public class Room {
-    private String id;
+    private int id;
     private int roomNumber;
     private RoomType roomType;
     private RoomStatus roomStatus;
     private double dailyRate;
+
+    private static int nextId = 1;
 
     public Room(int roomNumber, RoomType roomType) {
         if (roomNumber < 0) {
@@ -21,7 +23,7 @@ public class Room {
             throw new IllegalArgumentException("Room type cannot be null");
         }
 
-        this.id = UUID.randomUUID().toString();
+        this.id = nextId++;
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.roomStatus = RoomStatus.AVAILABLE;
@@ -30,7 +32,7 @@ public class Room {
 
     //Getter
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
