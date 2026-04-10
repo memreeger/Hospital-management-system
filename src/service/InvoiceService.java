@@ -63,13 +63,13 @@ public class InvoiceService {
                 dailyPrice);
 
         invoice.addItem(invoiceItem);
-        invoiceList.add(invoice);
 
 
         if (appointment != null) {
             addAppointmentFeeToInvoice(invoice, appointment);
         }
 
+        invoiceList.add(invoice);
 
     }
 

@@ -76,7 +76,7 @@ public class Invoice {
         if (status == null) {
             throw new IllegalArgumentException("Status cannot be null");
         }
-        this.status = status;
+        this.status = InvoiceStatus.UNPAID;
     }
 
     public void setPatient(Patient patient) {
