@@ -1,6 +1,7 @@
 package model.person;
 
 import model.department.Department;
+import util.ValidationUtil;
 
 public class Doctor extends Staff {
 
@@ -15,6 +16,7 @@ public class Doctor extends Staff {
             throw new IllegalArgumentException("Specialization cannot be null or blank");
         }
         this.specialization = specialization;
+        this.fee = fee;
     }
 
     public String getSpecialization() {
@@ -28,14 +30,12 @@ public class Doctor extends Staff {
         this.specialization = specialization;
     }
 
-    public double getFee(){
+    public double getFee() {
         return fee;
     }
 
-    public void setFee(double fee){
-        if(fee < 0 ){
-            throw new IllegalArgumentException("Fee cannot be smaller than 0");
-        }
+    public void setFee(double fee) {
+        ValidationUtil.requirePositive(fee, "Fee");
         this.fee = fee;
     }
 

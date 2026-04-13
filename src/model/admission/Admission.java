@@ -5,7 +5,6 @@ import model.person.Doctor;
 import model.person.Patient;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class Admission {
     private int id;

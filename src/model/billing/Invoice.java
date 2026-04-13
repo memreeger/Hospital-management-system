@@ -2,50 +2,70 @@ package model.billing;
 
 import model.enums.InvoiceStatus;
 import model.person.Patient;
+import util.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Invoice {
-    private int id;
+    private final int id;
     private InvoiceStatus status;
     private Patient patient;
     private double totalAmount;
     private double paidAmount;
-    private List<InvoiceItem> items;
+    private final List<InvoiceItem> items;
 
     private static int nextId = 1;
 
     public Invoice(Patient patient) {
-        validateObject(patient, "Patient");
+        Objects.requireNonNull(patient, "Patient cannot be null");
+
         this.id = nextId++;
-        setPatient(patient);
-        setStatus(status);
-        setPaidAmount(paidAmount);
-        setTotalAmaount(totalAmount);
         this.items = new ArrayList<>();
+        this.patient = patient;
+        this.status = InvoiceStatus.UNPAID;
+        this.paidAmount = 0.0;
+        this.totalAmount = getTotalAmount();
+
     }
 
-    //HELPER
-    public void validateObject(Object object, String fieldName) {
-        if (object == null) {
-            throw new IllegalArgumentException(fieldName + " cannot be null");
+    public void addPayment(double amount) {
+        ValidationUtil.requirePositive(amount, "Payment amount");
+
+        double remainingAmount = getTotalAmount() - paidAmount;
+        if (amount > remainingAmount) {
+            throw new IllegalArgumentException("Payment amount cannot exceed remaining balance");
+        }
+
+        paidAmount += amount;
+        updateStatus();
+    }
+
+    private void updateStatus() {
+        double totalAmount = getTotalAmount();
+
+        if (paidAmount == 0) {
+            status = InvoiceStatus.UNPAID;
+        } else if (paidAmount < totalAmount) {
+            status = InvoiceStatus.PARTIALLY_PAID;
+        } else {
+            status = InvoiceStatus.PAID;
         }
     }
 
     public void addItem(InvoiceItem invoiceItem) {
-        validateObject(invoiceItem, "Invoice item");
+        Objects.requireNonNull(invoiceItem, "Invoice items cannot be null");
         items.add(invoiceItem);
     }
 
-    public void deleteItem(InvoiceItem invoiceItem) {
+    public void removeItem(InvoiceItem invoiceItem) {
         Objects.requireNonNull(invoiceItem, "Invoice item cannot be null");
         items.remove(invoiceItem);
     }
 
     public double getTotalAmount() {
-        return totalAmount = items.stream()
+        return items.stream()
                 .mapToDouble(InvoiceItem::getTotalPrice)
                 .sum();
     }
@@ -72,24 +92,34 @@ public class Invoice {
         return new ArrayList<>(items);
     }
 
+    /*
     public void setStatus(InvoiceStatus status) {
-        if (status == null) {
-            throw new IllegalArgumentException("Status cannot be null");
-        }
-        this.status = InvoiceStatus.UNPAID;
+        Objects.requireNonNull(status, "Status cannot be null");
+        this.status = status;
     }
+     */
 
-    public void setPatient(Patient patient) {
+    /*public void setPatient(Patient patient) {
+        Objects.requireNonNull(patient, "Patient cannot be null");
         this.patient = patient;
     }
+    */
 
-    public void setTotalAmaount(double totalAmount) {
+
+    /*public void setTotalAmount(double totalAmount) {
+        ValidationUtil.requireNonNegative(totalAmount, "Total amount");
         this.totalAmount = totalAmount;
     }
 
-    public void setPaidAmount(double paidAmount) {
+     */
+
+    /*public void setPaidAmount(double paidAmount) {
+        ValidationUtil.requireNonNegative(paidAmount, "Paid amount");
+
         this.paidAmount = paidAmount;
     }
+
+     */
 
 
 

@@ -1,6 +1,7 @@
 package service;
 
 import model.department.Department;
+import util.ValidationUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,20 +15,9 @@ public class DepartmentService {
         this.departments = new HashMap<>();
     }
 
-    public void validateString(String name, String fieldName) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(fieldName + " cannot be null or blank");
-        }
-    }
-
-    public void validateInt(int val, String fieldName){
-        if(val < 0) {
-            throw new IllegalArgumentException(fieldName + " cannot be smaller than zero");
-        }
-    }
 
     public Department addDepartment(String name) {
-        validateString(name, "Department name");
+        ValidationUtil.requireNonBlank(name, "Name");
         if (existsByName(name)) {
             throw new IllegalArgumentException("This department already exists");
         }
@@ -41,8 +31,8 @@ public class DepartmentService {
         return new ArrayList<>(departments.values());
     }
 
-    public Department getDepartmentById(String id) {
-        validateString(id, "ID");
+    public Department getDepartmentById(int id) {
+        ValidationUtil.requireNonNegative(id, "ID");
 
         Department department = departments.get(id);
         if (department == null) {
@@ -52,7 +42,7 @@ public class DepartmentService {
     }
 
     public Department getDepartmentByName(String name) {
-        validateString(name, "Department name");
+        ValidationUtil.requireNonBlank(name, "Name");
 
         Department department = departments.values().stream()
                 .filter(d -> d.getName().equalsIgnoreCase(name))
@@ -62,8 +52,8 @@ public class DepartmentService {
     }
 
     public Department updateDepartmentNameById(int id, String newName) {
-        validateInt(id, "Id");
-        validateString(newName, "New name");
+        ValidationUtil.requireNonNegative(id, "ID");
+        ValidationUtil.requireNonBlank(newName, "New name");
 
         Department department = departments.get(id);
         if (department == null) {
@@ -82,22 +72,21 @@ public class DepartmentService {
         return department;
     }
 
-    private boolean existsByName(String name) {
-        validateString(name, "Department name");
+    public boolean existsByName(String name) {
+        ValidationUtil.requireNonBlank(name, "Name");
 
         return departments.values()
                 .stream()
                 .anyMatch(d -> d.getName().equalsIgnoreCase(name));
     }
 
-    public boolean existsById(String id) {
-        validateString(id, "ID");
+    public boolean existsById(int id) {
+        ValidationUtil.requirePositive(id, "ID");
         return departments.containsKey(id);
     }
 
-    public Department removeDepartmentById(String id) {
-        validateString(id, "ID");
-
+    public Department removeDepartmentById(int id) {
+        ValidationUtil.requirePositive(id, "ID");
         Department department = departments.get(id);
 
         if (department == null) {
@@ -116,11 +105,10 @@ public class DepartmentService {
         return departments.size();
     }
 
-    public List<Department> searchDepartmentsByName(String keyword) {
-        validateString(keyword, "Keyword");
-
+    public List<Department> searchDepartmentsByName(String departmentName) {
+        ValidationUtil.requireNonBlank(departmentName, "Department name");
         return departments.values().stream()
-                .filter(d -> d.getName().toLowerCase().contains(keyword.toLowerCase()))
+                .filter(d -> d.getName().toLowerCase().contains(departmentName.toLowerCase()))
                 .toList();
     }
 

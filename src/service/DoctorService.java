@@ -52,8 +52,8 @@ public class DoctorService {
 
     }
 
-    public Doctor getDoctorById(String id) {
-        validateString(id, "ID");
+    public Doctor getDoctorById(int id) {
+        validateInt(id, "ID");
         Doctor doctor = doctors.get(id);
         if (doctor == null) {
             throw new IllegalArgumentException("Doctor who has this ID not found");
@@ -156,8 +156,8 @@ public class DoctorService {
 
     }
 
-    public Doctor updateDoctorPhone(String id, String phone) {
-        validateString(id, "ID");
+    public Doctor updateDoctorPhone(int id, String phone) {
+        validateInt(id, "ID");
         validateString(phone, "Phone");
 
         Doctor doctor = doctors.get(id);
@@ -199,8 +199,8 @@ public class DoctorService {
 
     }
 
-    public boolean existsById(String id) {
-        validateString(id, "ID");
+    public boolean existsById(int id) {
+        validateInt(id, "ID");
         return doctors.containsKey(id);
     }
 

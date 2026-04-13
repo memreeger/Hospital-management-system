@@ -2,6 +2,6 @@ package model.enums;
 
 public enum InvoiceStatus {
     UNPAID,
-    PENDING,
+    PARTIALLY_PAID,
     PAID
 }

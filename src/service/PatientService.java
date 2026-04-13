@@ -2,15 +2,13 @@ package service;
 
 import model.enums.BloodType;
 import model.person.Patient;
+import util.ValidationUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PatientService {
     private Map<Integer, Patient> patientsById;
-    private Map<String, Patient> patientsByNumber;
+    private Map<Integer, Patient> patientsByNumber;
 
     public PatientService() {
         this.patientsById = new HashMap<>();
@@ -21,7 +19,7 @@ public class PatientService {
     public  int idd = 1;
 
     public Patient addPatient(String firstName, String lastName, String phone, String email,
-                              String patientNumber, BloodType bloodType, String emergencyContact) {
+                              int patientNumber, BloodType bloodType, String emergencyContact) {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("First name cannot be null or blank");
 
@@ -38,9 +36,7 @@ public class PatientService {
             throw new IllegalArgumentException("E-mail cannot be null or blank");
         }
 
-        if (patientNumber == null || patientNumber.isBlank()) {
-            throw new IllegalArgumentException("Patient number cannot be null or blank");
-        }
+        ValidationUtil.requirePositive(patientNumber,"Patient number");
 
         if (bloodType == null) {
             throw new IllegalArgumentException("Blood type cannot be null");
@@ -101,17 +97,13 @@ public class PatientService {
     }
 
     public Patient updatePatient(String firstName, String lastName, String phone, String email,
-                                 String patientNumber, BloodType bloodType, String emergencyContact, String newPatientNumber) {
+                                 int patientNumber, BloodType bloodType, String emergencyContact, int newPatientNumber) {
 
-        if (patientNumber == null || patientNumber.isBlank()) {
-            throw new IllegalArgumentException("Patient number cannot be null or blank");
-        }
+        ValidationUtil.requirePositive(patientNumber, "Patient number");
 
         Patient patient = patientsByNumber.get(patientNumber);
 
-        if (patient == null) {
-            throw new IllegalArgumentException("Patient not found");
-        }
+        Objects.requireNonNull(patient," Patient cannot be null");
 
         // optional alanlar
         if (firstName != null && !firstName.isBlank()) {
@@ -139,8 +131,8 @@ public class PatientService {
         }
 
         // key change
-        if (newPatientNumber != null && !newPatientNumber.isBlank()
-                && !patientNumber.equals(newPatientNumber)) {
+        if (newPatientNumber < 0
+                && patientNumber != newPatientNumber) {
 
             if (patientsByNumber.containsKey(newPatientNumber)) {
                 throw new IllegalStateException("New patient number already exists");
